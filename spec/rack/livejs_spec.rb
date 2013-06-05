@@ -36,4 +36,24 @@ describe Rack::Livejs do
 
   end
 
+  describe "getting a non-HTML file" do
+
+    before do
+      get "text.txt"
+    end
+
+    it "returns the expected content" do
+      expect(last_response.body).to include("sample content")
+    end
+
+    it "returns the expected content-type" do
+      expect(last_response.content_type).to eq "text/plain"
+    end
+
+    it "does not inject live.js" do
+      expect(last_response.body).to_not include("live.js")
+    end
+
+  end
+
 end
