@@ -28,6 +28,12 @@ describe Rack::Livejs do
       expect(html.css("body").text.strip).to eq("Sample content")
     end
 
+    it "injects the live.js script" do
+      script_tag = html.css("head script").first
+      expect(script_tag).to_not be_nil
+      expect(script_tag[:src]).to eq("http://livejs.com/live.js")
+    end
+
   end
 
 end
