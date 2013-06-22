@@ -18,26 +18,33 @@ module Rack
     def _call(env)
       status, headers, body = @app.call(env)
       if headers["Content-Type"] == "text/html"
-        html = read_all(body)
-        modified_html = inject_tag_into(html)
-        headers["Content-Length"] = modified_html.size
-        body = [modified_html]
+        body = ScriptInjector.new(body)
       end
       [status, headers, body]
     end
 
-    def read_all(body)
-      html = ""
-      body.each { |fragment| html << fragment }
-      html
-    end
+    class ScriptInjector
 
-    def inject_tag_into(html)
-      doc = Nokogiri::HTML(html)
-      head = doc.css("html head").first
-      return html unless head
-      head.add_child(%{<script src="http://livejs.com/live.js"/>})
-      doc.to_html
+      def initialize(original_body, livejs_url = "http://livejs.com/live.js")
+        @original_body = original_body
+        @livejs_url = livejs_url
+      end
+
+      def each
+        original_body.each do |line|
+          line = line.sub(%r{(<head( [^>]*)?>)}i) { $1 + livejs_script_html }
+          yield line
+        end
+      end
+
+      private
+
+      attr_reader :original_body, :livejs_url
+
+      def livejs_script_html
+        %{<script src="#{livejs_url}"/>}
+      end
+
     end
 
   end
