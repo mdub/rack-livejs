@@ -1,5 +1,3 @@
-require "rack/livejs/script_injector"
-
 module Rack
   class Livejs
 
@@ -15,7 +13,10 @@ module Rack
       else
         status, headers, body = @app.call(env)
         if headers["Content-Type"] == "text/html"
-          body = ScriptInjector.new(body, livejs_path)
+          html = ""; body.each { |chunk| html << chunk }
+          new_html = inject_livejs(html)
+          headers["Content-Length"] = new_html.size.to_s
+          body = [ new_html ]
         end
         [status, headers, body]
       end
@@ -25,6 +26,10 @@ module Rack
 
     def livejs_path
       "/_rack_livejs_/live.js"
+    end
+
+    def inject_livejs(html)
+      html.sub(%r{(<head( [^>]*)?>)}i) { $1 + %{<script src="#{livejs_path}"/>} }
     end
 
     class << self

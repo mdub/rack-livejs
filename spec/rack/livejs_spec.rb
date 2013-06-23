@@ -12,7 +12,7 @@ describe Rack::Livejs do
     Rack::Directory.new(fixtures_dir)
   end
 
-  let(:app) { described_class.new(decorated_app) }
+  let(:app) { Rack::Lint.new(described_class.new(decorated_app)) }
 
   describe "getting an HTML file" do
 
