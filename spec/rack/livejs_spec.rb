@@ -2,7 +2,6 @@ require 'nokogiri'
 require 'rack'
 require 'rack/livejs'
 require 'rack/test'
-require 'rspec'
 
 describe Rack::Livejs do
 
