@@ -1,6 +1,11 @@
 # Rack::Livejs
 
-TODO: Write a gem description
+Rack middleware to inject and serve "live.js", a handy javascript snippet for automatically updating content in browser when files in your local dev environment change.
+
+  "Just include Live.js and it will monitor the current page including local CSS and Javascript by sending consecutive HEAD requests to the server. Changes to CSS will be applied dynamically and HTML or Javascript changes will reload the page." - extracted form livejs.com
+
+View [livejs.com](http://livejs.com) for more information on live.js and how it works
+
 
 ## Installation
 
@@ -18,7 +23,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Nothing else to do. Rack will serve live.js into your site and will monitor your assets (css, js and html) changes.
 
 ## Contributing
 
