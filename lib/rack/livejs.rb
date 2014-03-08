@@ -31,7 +31,8 @@ module Rack
     end
 
     def inject_livejs(html)
-      html.sub(%r{(<head( [^>]*)?>)}i) { $1 + %{<script src="#{bundled_livejs_path}"></script>} }
+      livejs_snippet = %{<script src="#{bundled_livejs_path}"></script>}
+      html.sub(%r{(?=</head>)}i) { livejs_snippet }
     end
 
     def bundled_livejs_prefix
